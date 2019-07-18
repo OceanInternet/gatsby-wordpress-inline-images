@@ -200,7 +200,7 @@ const generateImagesAndUpdateNode = async function({
       maxWidth: "100%"
     },
     // Force show full image instantly
-    critical: true,
+    loading: 'eager',
     // fadeIn: true,
     imgStyle: {
       opacity: 1
