@@ -107,6 +107,9 @@ const replaceImage = async ({
   // find the full size image that matches, throw away WP resizes
   const parsedUrlData = parseWPImagePath(thisImg.attr("src"))
   const url = parsedUrlData.cleanUrl
+  const [full, imageId] = /(?:wp-image-)(\d+)/gm.exec(thisImg.attr('class')) || [];
+
+  imageId && console.log('got image ID', imageId);
 
   const imageNode = await downloadMediaFile({
     url,
