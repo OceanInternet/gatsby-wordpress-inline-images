@@ -5,7 +5,8 @@ const parseWPImagePath = require('./parse-wp-image-path');
 const generateImagesAndUpdateNode = require('./generate-images-and-update-node');
 
 module.exports = async ({
-  thisImg,
+  entity,
+  $img,
   options,
   cache,
   store,
@@ -17,13 +18,16 @@ module.exports = async ({
   touchNode,
   attachments,
   _auth
+}, {
+  baseUrl
 }) => {
   // find the full size image that matches, throw away WP resizes
-  const classes = thisImg.attr('class');
-  const src = thisImg.attr("src");
+  const classes = $img.attr('class');
+  const src = $img.attr("src");
   const url = parseWPImagePath(src) || '';
+  const wordpressRegex = new RegExp(`^http(?:s)?:\/\/(?:www\.)?${baseUrl.replace('.', `\.`)}\/.+$`);
 
-  if (!url.startsWith('http')) {
+  if (!url.match(wordpressRegex)) {
     return;
   }
 
@@ -45,6 +49,7 @@ module.exports = async ({
   }
 
   const imageNode = await downloadMediaFile({
+    entity,
     wordpressId,
     url,
     cache,
@@ -58,10 +63,10 @@ module.exports = async ({
   });
   if (!imageNode) return;
   let formattedImgTag = {};
-  formattedImgTag.url = thisImg.attr(`src`);
+  formattedImgTag.url = $img.attr(`src`);
   formattedImgTag.classList = classes ? classes.split(" ") : [];
-  formattedImgTag.title = thisImg.attr(`title`);
-  formattedImgTag.alt = thisImg.attr(`alt`); // if (parsedUrlData.width) formattedImgTag.width = parsedUrlData.width
+  formattedImgTag.title = $img.attr(`title`);
+  formattedImgTag.alt = $img.attr(`alt`); // if (parsedUrlData.width) formattedImgTag.width = parsedUrlData.width
   // if (parsedUrlData.height) formattedImgTag.height = parsedUrlData.height
 
   if (!formattedImgTag.url) return;
@@ -78,6 +83,6 @@ module.exports = async ({
       $
     }); // Replace the image string
 
-    if (rawHTML) thisImg.replaceWith(rawHTML);
+    if (rawHTML) $img.replaceWith(rawHTML);
   }
 };

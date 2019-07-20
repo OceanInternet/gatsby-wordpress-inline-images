@@ -22,10 +22,11 @@ module.exports = async (
     })
 
     await Promise.all(
-        imageRefs.map(thisImg =>
+        imageRefs.map($img =>
                           replaceImage(
                               {
-                                  thisImg,
+                                  entity,
+                                  $img,
                                   options,
                                   cache,
                                   reporter,
@@ -37,7 +38,7 @@ module.exports = async (
                                   touchNode,
                                   _auth,
                                   attachments
-                              })
+                              }, options)
         )
     )
 

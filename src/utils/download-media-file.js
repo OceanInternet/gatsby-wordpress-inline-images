@@ -3,7 +3,8 @@ const uuidv5 = require('uuid/v5');
 const { createRemoteFileNode } = require(`gatsby-source-filesystem`)
 
 module.exports = async ({
-                                       wordpressId=null,
+                            entity,
+                            wordpressId=null,
                                        url,
                                        cache,
                                        store,
@@ -47,7 +48,7 @@ module.exports = async ({
                                                       cache,
                                                       createNode,
                                                       createNodeId,
-                                                      // parentNodeId: e.id,
+                                                      parentNodeId: entity.id,
                                                       auth: _auth,
                                                       reporter,
                                                   })

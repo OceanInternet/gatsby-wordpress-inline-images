@@ -7,6 +7,7 @@ const {
 } = require(`gatsby-source-filesystem`);
 
 module.exports = async ({
+  entity,
   wordpressId = null,
   url,
   cache,
@@ -52,7 +53,7 @@ module.exports = async ({
         cache,
         createNode,
         createNodeId,
-        // parentNodeId: e.id,
+        parentNodeId: entity.id,
         auth: _auth,
         reporter
       });

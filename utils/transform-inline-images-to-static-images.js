@@ -23,8 +23,9 @@ module.exports = async ({
   imgs.each(function () {
     imageRefs.push($(this));
   });
-  await Promise.all(imageRefs.map(thisImg => replaceImage({
-    thisImg,
+  await Promise.all(imageRefs.map($img => replaceImage({
+    entity,
+    $img,
     options,
     cache,
     reporter,
@@ -36,6 +37,6 @@ module.exports = async ({
     touchNode,
     _auth,
     attachments
-  })));
+  }, options)));
   entity.content = $.html();
 };
