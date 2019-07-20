@@ -43,7 +43,7 @@
 		"prepare": "cross-env NODE_ENV=production npm run build",
 		"watch": "babel -w ./src --out-dir . --extensions '.js' --ignore **/__tests__",
 		"lint:fix": "eslint --fix './src/**/*.js'",
-		"add-dist": "git add utils gatsby-*.js",
+		"add-dist": "git add utils gatsby-*.js"
 	},
 	"pre-commit": [
 		"lint:fix",
