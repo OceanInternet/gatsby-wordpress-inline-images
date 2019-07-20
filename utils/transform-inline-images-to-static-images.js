@@ -1,42 +1,35 @@
-const replaceImage = require('./replace-image');
-
 const cheerio = require('cheerio');
+
+const replaceImage = require('./replace-image');
 
 module.exports = async ({
   entity,
   cache,
   reporter,
-  store,
-  createNode,
-  createNodeId,
-  getNode,
-  touchNode,
-  _auth,
-  attachments
+  wpInlineImages
 }, options) => {
   const field = entity.content;
-  if (!field && typeof field !== "string" || !field.includes("<img")) return;
+  if (!field && typeof field !== 'string' || !field.includes('<img')) return;
   const $ = cheerio.load(field);
-  const imgs = $(`img`);
-  if (imgs.length === 0) return;
-  const imageRefs = [];
-  imgs.each(function () {
-    imageRefs.push($(this));
+  const $imgs = $(`img`);
+
+  if ($imgs.length === 0) {
+    return;
+  }
+
+  const imageRefs = $imgs.map(function return$img() {
+    return $(this);
   });
+  const {
+    baseUrl
+  } = options;
   await Promise.all(imageRefs.map($img => replaceImage({
-    entity,
+    wpInlineImages,
     $img,
     options,
     cache,
     reporter,
-    $,
-    store,
-    createNode,
-    createNodeId,
-    getNode,
-    touchNode,
-    _auth,
-    attachments
-  }, options)));
+    baseUrl
+  })));
   entity.content = $.html();
 };

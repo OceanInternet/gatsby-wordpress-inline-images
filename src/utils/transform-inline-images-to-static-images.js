@@ -1,46 +1,37 @@
-const replaceImage = require('./replace-image');
 const cheerio = require('cheerio');
+const replaceImage = require('./replace-image');
 
-module.exports = async (
-    { entity, cache, reporter, store, createNode, createNodeId, getNode, touchNode, _auth, attachments },
-    options
-) => {
-    const field = entity.content
+module.exports = async ({ entity, cache, reporter, wpInlineImages }, options) => {
+    const field = entity.content;
 
-    if ((!field && typeof field !== "string") || !field.includes("<img")) return
+    if ((!field && typeof field !== 'string') || !field.includes('<img')) return;
 
-    const $ = cheerio.load(field)
+    const $ = cheerio.load(field);
 
-    const imgs = $(`img`)
+    const $imgs = $(`img`);
 
-    if (imgs.length === 0) return
+    if ($imgs.length === 0) {
+        return;
+    }
 
-    const imageRefs = []
+    const imageRefs = $imgs.map(function return$img() {
+        return $(this);
+    });
 
-    imgs.each(function() {
-        imageRefs.push($(this))
-    })
+    const { baseUrl } = options;
 
     await Promise.all(
         imageRefs.map($img =>
-                          replaceImage(
-                              {
-                                  entity,
-                                  $img,
-                                  options,
-                                  cache,
-                                  reporter,
-                                  $,
-                                  store,
-                                  createNode,
-                                  createNodeId,
-                                  getNode,
-                                  touchNode,
-                                  _auth,
-                                  attachments
-                              }, options)
+            replaceImage({
+                wpInlineImages,
+                $img,
+                options,
+                cache,
+                reporter,
+                baseUrl,
+            })
         )
-    )
+    );
 
-    entity.content = $.html()
-}
+    entity.content = $.html();
+};

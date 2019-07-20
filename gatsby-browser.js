@@ -8,7 +8,7 @@ exports.onRouteUpdate = () => {
   const imageWrappers = document.querySelectorAll(imageWrapperSelector); // https://css-tricks.com/snippets/javascript/loop-queryselectorall-matches/
   // for cross-browser looping through NodeList without polyfills
 
-  for (let i = 0; i < imageWrappers.length; i++) {
+  for (let i = 0; i < imageWrappers.length; i += 1) {
     const imageWrapper = imageWrappers[i];
     const backgroundElement = imageWrapper.querySelector(imageBackgroundSelector);
     const imageElement = imageWrapper.querySelector(imageSelector);

@@ -1,79 +1,34 @@
 const transformInlineImagesToStaticImages = require('./utils/transform-inline-images-to-static-images');
-const getImageAttachments = require('./utils/get-image-attachments');
 
-const _ = require(`lodash`)
-const { createRemoteFileNode } = require(`gatsby-source-filesystem`)
-const { fluid } = require(`gatsby-plugin-sharp`)
+exports.sourceNodes = async ({ cache, reporter, getNodes }, pluginOptions) => {
+    const defaults = {
+        maxWidth: 650,
+        wrapperStyle: ``,
+        backgroundColor: `white`,
+        postTypes: ['post', 'page'],
+        // linkImagesToOriginal: true,
+        // showCaptions: false,
+        // pathPrefix,
+        // withWebp: false
+    };
 
-exports.sourceNodes = async ({
-                                 actions,
-                                 getNode,
-                                 store,
-                                 cache,
-                                 createNodeId,
-                                 createContentDigest,
-                                 reporter,
+    const options = { ...defaults, ...pluginOptions };
 
-                                 getNodes,
-                             },
-  pluginOptions
-) => {
-    const { createNode, touchNode } = actions
+    const nodes = getNodes();
 
-    const {auth:_auth={}} = pluginOptions;
+    // for now just get all posts and pages.
+    // this will be dynamic later
+    const wpInlineImages = nodes.filter(
+        ({ internal }) => internal.owner === 'gatsby-source-filesystem' && internal.mediaType.startsWith('image')
+    );
+    const entities = nodes.filter(
+        ({ internal, type }) => internal.owner === 'gatsby-source-wordpress' && options.postTypes.includes(type)
+    );
 
-  const defaults = {
-    maxWidth: 650,
-    wrapperStyle: ``,
-    backgroundColor: `white`,
-    postTypes: ["post", "page"],
-    withWebp: false,
-    // linkImagesToOriginal: true,
-    // showCaptions: false,
-    // pathPrefix,
-    // withWebp: false
-  }
-
-  const options = _.defaults(pluginOptions, defaults)
-
-  const nodes = getNodes()
-
-  // for now just get all posts and pages.
-  // this will be dynamic later
-  const entities = nodes.filter(
-    node =>
-      node.internal.owner === "gatsby-source-wordpress" &&
-      options.postTypes.includes(node.type)
-  )
-
-    const attachments = getImageAttachments(entities);
-
-  // we need to await transforming all the entities since we may need to get images remotely and generating fluid image data is async
-  await Promise.all(
-    entities.map(async entity =>
-                     transformInlineImagesToStaticImages(
-        {
-            entity,
-            store,
-            cache,
-            createNode,
-            createNodeId,
-            touchNode,
-            getNode,
-            _auth,
-            reporter,
-            attachments
-        },
-        options
-      )
-    )
-  )
-}
-
-
-
-
-
-
-
-
+    // we need to await transforming all the entities since we may need to get images remotely and generating fluid image data is async
+    await Promise.all(
+        entities.map(async entity =>
+            transformInlineImagesToStaticImages({ entity, cache, reporter, wpInlineImages }, options)
+        )
+    );
+};

@@ -11,16 +11,17 @@ const Img = require(`gatsby-image`); // Takes a node and generates the needed im
 
 
 module.exports = async ({
-  formattedImgTag,
   imageNode,
   options,
   cache,
-  reporter,
-  $
+  reporter
 }) => {
-  if (!imageNode || !imageNode.absolutePath) return;
+  if (!imageNode || !imageNode.absolutePath) {
+    return null;
+  }
+
   let fluidResultWebp;
-  let fluidResult = await fluid({
+  const fluidResult = await fluid({
     file: imageNode,
     args: { ...options,
       maxWidth: options.maxWidth
@@ -41,7 +42,9 @@ module.exports = async ({
     });
   }
 
-  if (!fluidResult) return;
+  if (!fluidResult) {
+    return null;
+  }
 
   if (options.withWebp) {
     fluidResult.srcSetWebp = fluidResultWebp.srcSet;
@@ -50,11 +53,11 @@ module.exports = async ({
   const imgOptions = {
     fluid: fluidResult,
     style: {
-      maxWidth: "100%"
+      maxWidth: '100%'
     },
     // Force show full image instantly
+    loading: 'auto',
     critical: true,
-    // fadeIn: true,
     imgStyle: {
       opacity: 1
     }
