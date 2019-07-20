@@ -1,22 +1,22 @@
-const moment = require('moment');
 const uuidv5 = require('uuid/v5');
 const { createRemoteFileNode } = require(`gatsby-source-filesystem`)
 
 module.exports = async ({
                             entity,
                             wordpressId=null,
-                                       url,
-                                       cache,
-                                       store,
-                                       createNode,
-                                       createNodeId,
-                                       getNode,
-                                       touchNode,
+                            url,
+                            cache,
+                            store,
+                            createNode,
+                            createNodeId,
+                            getNode,
+                            touchNode,
                             reporter,
-    _auth,
-                                   }) => {
+                            _auth,
+                        }) => {
 
     let fileNode;
+    let fileNodeID;
     let mediaDataCacheKey;
 
     if(wordpressId) {
@@ -25,17 +25,17 @@ module.exports = async ({
         mediaDataCacheKey = uuidv5(url, uuidv5.URL);
     }
 
-    let {fileNodeID=null} = await cache.get(mediaDataCacheKey) || {};
+    const cacheMediaData = await cache.get(mediaDataCacheKey);
 
-    // If we have cached media data and it wasn't modified, reuse
-    // previously created file node to not try to re-download
-    if (fileNodeID) {
-        fileNode = getNode(fileNodeID)
+    if(cacheMediaData && entity.modified === cacheMediaData.modified) {
+
+        fileNode = getNode(cacheMediaData.fileNodeID)
 
         // check if node still exists in cache
         // it could be removed if image was made private
         if (fileNode) {
-            touchNode({ nodeId: fileNodeID })
+            fileNodeID = cacheMediaData.fileNodeID
+            touchNode({nodeId: fileNodeID})
         }
     }
 
@@ -54,20 +54,15 @@ module.exports = async ({
                                                   })
 
             if (fileNode) {
-                let { id:fileNodeID } = fileNode;
-                const modified = moment().format();
 
-                await cache.set(mediaDataCacheKey, { fileNodeID, modified })
-
-                // console.log('set cached image', mediaDataCacheKey);
-            } else {
-                // console.log('could not createRemoteFileNode', mediaDataCacheKey);
+                await cache.set(mediaDataCacheKey, {
+                    fileNodeID,
+                    modified: entity.modified,
+                })
             }
         } catch (e) {
             console.error(e);
         }
-    } else {
-        // console.log('got cached image', mediaDataCacheKey);
     }
 
     return fileNode
