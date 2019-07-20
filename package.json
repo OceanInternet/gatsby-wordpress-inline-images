@@ -10,7 +10,18 @@
 	"main": "n/a",
 	"dependencies": {
 		"@babel/runtime": "^7.0.0",
-		"cheerio": "^1.0.0-rc.2"
+		"cheerio": "^1.0.0-rc.3",
+		"faker": "^4.1.0",
+		"gatsby": "^2.13.28",
+		"gatsby-image": "^2.2.6",
+		"gatsby-plugin-sharp": "^2.2.8",
+		"gatsby-source-filesystem": "^2.1.5",
+		"htmlparser2": "^3.10.1",
+		"moment": "^2.24.0",
+		"node-html-parser": "^1.1.16",
+		"react-dom": "^16.8.6",
+		"utils": "^0.3.1",
+		"uuid": "^3.3.2"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.0.0",
