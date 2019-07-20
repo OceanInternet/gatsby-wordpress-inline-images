@@ -22,12 +22,27 @@ exports.sourceNodes = async ({
   // this will be dynamic later
 
   const wpInlineImages = nodes.filter(({
-    internal
-  }) => internal.owner === 'gatsby-source-filesystem' && internal.mediaType.startsWith('image'));
+    internal = {},
+    type = ''
+  }) => {
+    const {
+      owner = '',
+      mediaType = ''
+    } = internal;
+    return owner === 'gatsby-source-filesystem' && type === 'File' && mediaType.startsWith('image');
+  });
   const entities = nodes.filter(({
-    internal,
-    type
-  }) => internal.owner === 'gatsby-source-wordpress' && options.postTypes.includes(type)); // we need to await transforming all the entities since we may need to get images remotely and generating fluid image data is async
+    internal = {},
+    type = ''
+  }) => {
+    const {
+      owner = ''
+    } = internal;
+    const {
+      postTypes = []
+    } = options || {};
+    return owner === 'gatsby-source-wordpress' && postTypes.includes(type);
+  }); // we need to await transforming all the entities since we may need to get images remotely and generating fluid image data is async
 
   await Promise.all(entities.map(async entity => transformInlineImagesToStaticImages({
     entity,
