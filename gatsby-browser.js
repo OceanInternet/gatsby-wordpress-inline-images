@@ -2,7 +2,7 @@ const {
   imageSelector,
   imageBackgroundSelector,
   imageWrapperSelector
-} = require(`./constants`);
+} = require(`./utils/constants`);
 
 exports.onRouteUpdate = () => {
   const imageWrappers = document.querySelectorAll(imageWrapperSelector); // https://css-tricks.com/snippets/javascript/loop-queryselectorall-matches/

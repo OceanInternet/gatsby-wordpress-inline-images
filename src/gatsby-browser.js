@@ -1,4 +1,4 @@
-const { imageSelector, imageBackgroundSelector, imageWrapperSelector } = require(`./constants`);
+const { imageSelector, imageBackgroundSelector, imageWrapperSelector } = require(`./utils/constants`);
 
 exports.onRouteUpdate = () => {
     const imageWrappers = document.querySelectorAll(imageWrapperSelector);
