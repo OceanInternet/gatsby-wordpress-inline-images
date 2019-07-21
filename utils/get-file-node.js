@@ -26,12 +26,10 @@ module.exports = async (gatsby, {
       url
     });
 
-    if (fileNode) {
-      console.info(`hit remote - ${url}`);
+    if (fileNode) {// console.info(`hit remote - ${url}`);
     }
-  } else {
-    console.info(`hit cache  - ${url}`);
-  }
+  } else {// console.info(`hit cache  - ${url}`);
+    }
 
   return fileNode;
 };

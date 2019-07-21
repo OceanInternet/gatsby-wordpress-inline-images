@@ -20,10 +20,10 @@ module.exports = async (gatsby, { src }) => {
         fileNode = await createRemoteFileNode(gatsby, { mediaDataCacheKey, url });
 
         if (fileNode) {
-            console.info(`hit remote - ${url}`);
+            // console.info(`hit remote - ${url}`);
         }
     } else {
-        console.info(`hit cache  - ${url}`);
+        // console.info(`hit cache  - ${url}`);
     }
 
     return fileNode;
