@@ -2,12 +2,10 @@ const cheerio = require('cheerio');
 
 const replaceImage = require('./replace-image');
 
-module.exports = async ({
+module.exports = async (gatsby, {
   entity,
-  cache,
-  reporter,
-  wpInlineImages
-}, options) => {
+  options
+}) => {
   const field = entity.content;
   if (!field && typeof field !== 'string' || !field.includes('<img')) return;
   const $ = cheerio.load(field);
@@ -21,16 +19,9 @@ module.exports = async ({
   $imgs.each(function return$img() {
     imageRefs.push($(this));
   });
-  const {
-    baseUrl
-  } = options;
-  await Promise.all(imageRefs.map($img => replaceImage({
-    wpInlineImages,
+  await Promise.all(imageRefs.map($img => replaceImage(gatsby, {
     $img,
-    options,
-    cache,
-    reporter,
-    baseUrl
+    options
   })));
   entity.content = $.html();
 };

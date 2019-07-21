@@ -3,9 +3,9 @@ const ReactDOMServer = require(`react-dom/server`);
 const { fluid } = require(`gatsby-plugin-sharp`);
 const Img = require(`gatsby-image`);
 
-// Takes a node and generates the needed images and then returns
-// the needed HTML replacement for the image
-module.exports = async ({ imageNode, options, cache, reporter }) => {
+module.exports = async (gatsby, { imageNode, options }) => {
+    const { cache, reporter } = gatsby;
+
     if (!imageNode || !imageNode.absolutePath) {
         return null;
     }

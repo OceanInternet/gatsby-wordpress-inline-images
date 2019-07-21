@@ -6,16 +6,17 @@ const {
   fluid
 } = require(`gatsby-plugin-sharp`);
 
-const Img = require(`gatsby-image`); // Takes a node and generates the needed images and then returns
-// the needed HTML replacement for the image
+const Img = require(`gatsby-image`);
 
-
-module.exports = async ({
+module.exports = async (gatsby, {
   imageNode,
-  options,
-  cache,
-  reporter
+  options
 }) => {
+  const {
+    cache,
+    reporter
+  } = gatsby;
+
   if (!imageNode || !imageNode.absolutePath) {
     return null;
   }

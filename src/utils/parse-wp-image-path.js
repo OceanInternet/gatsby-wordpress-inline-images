@@ -4,4 +4,4 @@ module.exports = imgSrc =>
         .trim()
         .replace(/[-_]+\d+x\d+/g, '') // WP sizes
         .replace(/[-_]+(\.\w+)$/, '$1') // trailing "-" or "_"
-        .replace(/^.+\/wp-content\/uploads\/(\d+\/\d+\/.+\.\w+)$/, 'wordpress/$1');
+        .replace(/^(.+\/wp-content\/)uploads\/(\d+\/\d+\/.+\.\w+)$/, '$1gatsby/$2');

@@ -1,10 +1,9 @@
 const transformInlineImagesToStaticImages = require('./utils/transform-inline-images-to-static-images');
 
-exports.sourceNodes = async ({
-  cache,
-  reporter,
-  getNodes
-}, pluginOptions) => {
+exports.sourceNodes = async (gatsby, pluginOptions) => {
+  const {
+    getNodes
+  } = gatsby;
   const defaults = {
     maxWidth: 650,
     wrapperStyle: ``,
@@ -18,19 +17,7 @@ exports.sourceNodes = async ({
   const options = { ...defaults,
     ...pluginOptions
   };
-  const nodes = getNodes(); // for now just get all posts and pages.
-  // this will be dynamic later
-
-  const wpInlineImages = nodes.filter(({
-    internal = {}
-  }) => {
-    const {
-      owner = '',
-      type = '',
-      mediaType = ''
-    } = internal;
-    return owner === 'gatsby-source-filesystem' && type === 'File' && mediaType.startsWith('image');
-  });
+  const nodes = getNodes();
   const entities = nodes.filter(({
     internal = {},
     type = ''
@@ -44,10 +31,8 @@ exports.sourceNodes = async ({
     return owner === 'gatsby-source-wordpress' && postTypes.includes(type);
   }); // we need to await transforming all the entities since we may need to get images remotely and generating fluid image data is async
 
-  await Promise.all(entities.map(async entity => transformInlineImagesToStaticImages({
+  await Promise.all(entities.map(async entity => transformInlineImagesToStaticImages(gatsby, {
     entity,
-    cache,
-    reporter,
-    wpInlineImages
-  }, options)));
+    options
+  })));
 };
