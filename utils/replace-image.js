@@ -16,9 +16,9 @@ module.exports = async (gatsby, {
     return;
   }
 
-  const imageNode = getFileNode(gatsby, {
+  const imageNode = (await getFileNode(gatsby, {
     src
-  }) || null;
+  })) || null;
 
   if (!imageNode) {
     console.error(`miss       - ${src}`);
