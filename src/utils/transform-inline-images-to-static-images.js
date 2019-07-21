@@ -22,8 +22,6 @@ module.exports = async ({ entity, cache, reporter, wpInlineImages }, options) =>
 
     const { baseUrl } = options;
 
-    console.info(`Got ${$imgs.length} images for ${entity.wordpress_id}`);
-
     await Promise.all(
         imageRefs.map($img =>
             replaceImage({
