@@ -17,12 +17,14 @@ module.exports = async ({
     return;
   }
 
-  const imageRefs = $imgs.map(function return$img() {
-    return $(this);
+  const imageRefs = [];
+  $imgs.each(function return$img() {
+    imageRefs.push($(this));
   });
   const {
     baseUrl
   } = options;
+  console.info(`Got ${$imgs.length} images for ${entity.wordpress_id}`);
   await Promise.all(imageRefs.map($img => replaceImage({
     wpInlineImages,
     $img,

@@ -24,6 +24,7 @@ module.exports = async ({
   }) => filePath === relativePath) || null;
 
   if (!imageNode) {
+    console.info(`miss - ${filePath}`);
     return;
   }
 

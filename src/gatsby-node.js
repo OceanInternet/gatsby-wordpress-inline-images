@@ -18,11 +18,12 @@ exports.sourceNodes = async ({ cache, reporter, getNodes }, pluginOptions) => {
 
     // for now just get all posts and pages.
     // this will be dynamic later
-    const wpInlineImages = nodes.filter(({ internal = {}, type = '' }) => {
-        const { owner = '', mediaType = '' } = internal;
+    const wpInlineImages = nodes.filter(({ internal = {} }) => {
+        const { owner = '', type = '', mediaType = '' } = internal;
 
         return owner === 'gatsby-source-filesystem' && type === 'File' && mediaType.startsWith('image');
     });
+
     const entities = nodes.filter(({ internal = {}, type = '' }) => {
         const { owner = '' } = internal;
         const { postTypes = [] } = options || {};

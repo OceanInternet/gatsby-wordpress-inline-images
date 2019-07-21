@@ -22,11 +22,11 @@ exports.sourceNodes = async ({
   // this will be dynamic later
 
   const wpInlineImages = nodes.filter(({
-    internal = {},
-    type = ''
+    internal = {}
   }) => {
     const {
       owner = '',
+      type = '',
       mediaType = ''
     } = internal;
     return owner === 'gatsby-source-filesystem' && type === 'File' && mediaType.startsWith('image');

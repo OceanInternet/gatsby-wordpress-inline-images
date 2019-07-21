@@ -16,6 +16,7 @@ module.exports = async ({ wpInlineImages, $img, options, cache, reporter, baseUr
     const imageNode = wpInlineImages.find(({ relativePath }) => filePath === relativePath) || null;
 
     if (!imageNode) {
+        console.info(`miss - ${filePath}`);
         return;
     }
 
